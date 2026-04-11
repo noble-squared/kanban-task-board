@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../utils/supabase'
 import type { Session, User } from '@supabase/supabase-js'
 import type { Task } from './types';
+import TaskComponent from './components/TaskComponent';
 
 const tableName = "tasks";
 
@@ -19,6 +20,7 @@ function App() {
 	const [authenticated, setAuthenticated] = useState(false);
 	const [loading, setLoading] = useState(true);
 
+	//#region Starting code
   useEffect(() => {
 		async function init() {
 			//log in
@@ -75,21 +77,24 @@ function App() {
 					setError(error.message);
 				} else setTasks(data);
 			}
+			setLoading(false);
 		}
 
     init();
-		setLoading(false);
   }, []);
+	//#endregion
 
   return (
 		<>
-			<main>
+			<main className='flex-col gap-16'>
+				<h1>Kanban Board</h1>
 				{loading ? (
 					<h1>Loading...</h1>
 				) : (
 					<ul>
 						{tasks.map((task) => (
-							<li key={task.id}> {task.title} + {task.description} + {task.status} + {task.user_id} </li>
+							//<li key={task.id}> {task.title} + {task.description} + {task.status} + {task.user_id} </li>
+							<li key={task.id}> <TaskComponent task={task} /> </li>
 						))}
 					</ul>
 				)}
